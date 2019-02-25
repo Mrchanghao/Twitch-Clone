@@ -7,7 +7,7 @@ const Header = () => {
     <header className='ui secondary pointing menu'>
         <Link to='/' className='item'>Streaming</Link>
         <nav className='right menu'>
-          <Link to='/streams/list' className='item'>All Stream</Link>
+          <Link to='/streams/list' className='item' style={{fontWeight: 'bold'}}>모든 스트림 보기</Link>
           <GoogleAuth />
         </nav>
       

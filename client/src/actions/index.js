@@ -1,6 +1,6 @@
 import { SIGN_IN, SIGN_OUT, CREATE_STREAM, FETCH_STREAMS, FETCH_STREAM, EDIT_STREAM, DELETE_STREAM } from "./types";
 import api from '../api/index';
-
+import history from '../history';
 
 export const signIn = (userId) => {
   return {
@@ -15,10 +15,13 @@ export const signOut = () => {
   }
 }
 
-export const createStream = (formValues) => async dispatch => {
+export const createStream = (formValues) => async (dispatch, getState) => {
   try {
-    const res = await api.post('/streams', formValues);
+    
+    const {userId} = getState().auth;
+    const res = await api.post('/streams', {...formValues, userId});
     dispatch({type: CREATE_STREAM, payload: res.data})
+    history.push('/');
   } catch (error) {
     console.log(error)
   }
@@ -44,8 +47,9 @@ export const fetchStream = (id) => async dispatch => {
 
 export const editStream = (id, updatedValue) => async dispatch => {
   try {
-    const res = await api.put(`/streams/${id}`, updatedValue)
+    const res = await api.patch(`/streams/${id}`, updatedValue)
     dispatch({type: EDIT_STREAM, payload: res.data})
+    history.push('/');
   } catch (error) {
     console.log(error)
   }
@@ -55,6 +59,7 @@ export const deleteStream = (id) => async dispatch => {
   try {
     await api.delete(`/streams/${id}`);
     dispatch({type: DELETE_STREAM, payload: id})
+    history.push('/')
   } catch (error) {
     console.log(error)
   }
